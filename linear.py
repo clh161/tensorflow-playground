@@ -8,23 +8,23 @@ from keras.models import Sequential
 from matplotlib import pyplot as plt
 
 tran_size = 1500
+targeted_coin = 'btc'
+coins = ['btc', 'eos', 'eth', 'xrp', 'ltc', 'dash']
+X = None
+for i in range(len(coins)):
+    coin = coins[i]
+    dataframe = pandas.read_csv(coin + ".csv", header=None)
+    values = dataframe.values
+    if X is None:
+        X = values[:tran_size, 0:-1]
+        test_X = values[tran_size:, 0:-1]
+    else:
+        X = np.concatenate((X, values[:tran_size, 0:-1]), axis=1)
+        test_X = np.concatenate((test_X, values[tran_size:, 0:-1]), axis=1)
+    if coin == targeted_coin:
+        Y = values[:tran_size, -1:]
+        test_Y = values[tran_size:, -1:]
 
-# loaddataset
-btcdataframe = pandas.read_csv("btc.csv", header=None)
-btc = btcdataframe.values
-ethdataframe = pandas.read_csv("eth.csv", header=None)
-eth = ethdataframe.values
-eosdataframe = pandas.read_csv("eos.csv", header=None)
-eos = eosdataframe.values
-xrpdataframe = pandas.read_csv("xrp.csv", header=None)
-xrp = xrpdataframe.values
-# split into input (X) and output (Y) variables
-X = np.concatenate((btc[:tran_size, 0:-1], eth[:tran_size, 0:-1], xrp[:tran_size, 0:-1], eos[:tran_size, 0:-1]), axis=1)
-Y = btc[:tran_size, -1:]
-
-test_X = np.concatenate((btc[tran_size:, 0:-1], eth[tran_size:, 0:-1], xrp[tran_size:, 0:-1], eos[tran_size:, 0:-1]),
-                        axis=1)
-test_Y = btc[tran_size:, -1:]
 model = Sequential()
 model.add(Dense(len(X[0]), input_dim=len(X[0]), kernel_initializer='normal', activation='relu'))
 model.add(Dense(1000))
@@ -58,4 +58,4 @@ evaluation = model.evaluate(x=test_X, y=test_Y)
 # plt.plot(diff, label='diff', color='red')
 plt.show()
 
-print("Average of diff: {:.2f}%%".format(np.average(diff)))
+print("Average of diff: {:.2f}%".format(np.average(diff)))
