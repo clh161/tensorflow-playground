@@ -5,11 +5,12 @@ import pandas
 from keras.layers import Dense
 from keras import optimizers
 from keras.models import Sequential
+from keras.models import load_model
 from matplotlib import pyplot as plt
 
 tran_size = 1500
-targeted_coin = 'btc'
-coins = ['btc', 'eos', 'eth', 'xrp', 'ltc', 'dash']
+targeted_coin = 'mco'
+coins = ['eos', 'eth', 'xrp', 'ltc', 'dash', 'mco', 'bnb']
 track_size = 10
 prediction_interval = 12
 X = None
@@ -35,10 +36,19 @@ model.add(Dense(len(X[0]), input_dim=len(X[0]), kernel_initializer='normal', act
 model.add(Dense(1000))
 model.add(Dense(1, kernel_initializer='normal'))
 # Compile model
-optimizer = optimizers.Adam(lr=0.00001)
+optimizer = optimizers.Adam(lr=0.0000000001)
 
 model.compile(loss='mean_squared_error', optimizer=optimizer)
-history = model.fit(X, Y, epochs=100, batch_size=32, verbose=0)
+try:
+    model.load_weights('model.h5')
+except:
+    print("Cannot load model")
+steps = 100
+for i in range(steps):
+    history = model.fit(X, Y, epochs=100, batch_size=32, verbose=0)
+    model.save_weights('model.h5')
+    evaluation = model.evaluate(test_X, test_Y)
+    print("{:d}/{:d} Loss: {:f}".format(i + 1, steps, evaluation))
 
 actual = test_Y.reshape((1, len(test_Y)))[0]
 prediction = model.predict(x=np.array(test_X))
@@ -60,9 +70,4 @@ ax2.legend(loc=2)
 evaluation = model.evaluate(x=test_X, y=test_Y)
 plt.show()
 
-evaluation = model.evaluate(test_X, test_Y)
-
-print("Loss: {:.0f}".format(evaluation))
 print("Average of diff: {:.2f}%".format(np.average(diff)))
-
-model.save('model.h5')
