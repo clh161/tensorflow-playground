@@ -60,6 +60,9 @@ ax2.legend(loc=2)
 evaluation = model.evaluate(x=test_X, y=test_Y)
 plt.show()
 
+evaluation = model.evaluate(test_X, test_Y)
+
+print("Loss: {:.0f}".format(evaluation))
 print("Average of diff: {:.2f}%".format(np.average(diff)))
 
 model.save_weights('model.h5')
