@@ -65,4 +65,4 @@ evaluation = model.evaluate(test_X, test_Y)
 print("Loss: {:.0f}".format(evaluation))
 print("Average of diff: {:.2f}%".format(np.average(diff)))
 
-model.save_weights('model.h5')
+model.save('model.h5')
