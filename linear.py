@@ -53,9 +53,6 @@ ax2.set_ylim([0, 25])
 ax2.legend(loc=2)
 
 evaluation = model.evaluate(x=test_X, y=test_Y)
-# plt.plot(test_Y, label='Actual')
-# plt.plot(prediction, label='Prediction')
-# plt.plot(diff, label='diff', color='red')
 plt.show()
 
 print("Average of diff: {:.2f}%".format(np.average(diff)))
