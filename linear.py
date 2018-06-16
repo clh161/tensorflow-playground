@@ -10,20 +10,25 @@ from matplotlib import pyplot as plt
 tran_size = 1500
 targeted_coin = 'btc'
 coins = ['btc', 'eos', 'eth', 'xrp', 'ltc', 'dash']
+track_size = 10
+prediction_interval = 12
 X = None
 for i in range(len(coins)):
     coin = coins[i]
     dataframe = pandas.read_csv(coin + ".csv", header=None)
     values = dataframe.values
+    d = []
+    for j in range(len(values) - track_size - prediction_interval):
+        d.append(values[j:j + track_size, 1:].reshape((1, track_size))[0])
     if X is None:
-        X = values[:tran_size, 0:-1]
-        test_X = values[tran_size:, 0:-1]
+        X = d[:tran_size]
+        test_X = d[tran_size:]
     else:
-        X = np.concatenate((X, values[:tran_size, 0:-1]), axis=1)
-        test_X = np.concatenate((test_X, values[tran_size:, 0:-1]), axis=1)
+        X = np.concatenate((X, d[:tran_size]), axis=1)
+        test_X = np.concatenate((test_X, d[tran_size:]), axis=1)
     if coin == targeted_coin:
-        Y = values[:tran_size, -1:]
-        test_Y = values[tran_size:, -1:]
+        Y = values[track_size + prediction_interval:tran_size + track_size + prediction_interval, 1:]
+        test_Y = values[tran_size + track_size + prediction_interval:len(values), 1:]
 
 model = Sequential()
 model.add(Dense(len(X[0]), input_dim=len(X[0]), kernel_initializer='normal', activation='relu'))
