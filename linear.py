@@ -61,3 +61,5 @@ evaluation = model.evaluate(x=test_X, y=test_Y)
 plt.show()
 
 print("Average of diff: {:.2f}%".format(np.average(diff)))
+
+model.save_weights('model.h5')
