@@ -7,14 +7,19 @@ from keras import optimizers
 from keras.models import Sequential
 from matplotlib import pyplot as plt
 
+tran_size = 1500
+
 # loaddataset
-dataframe = pandas.read_csv("btc.csv", header=None)
-dataset = dataframe.values
+btcdataframe = pandas.read_csv("btc.csv", header=None)
+btc = btcdataframe.values
+ethdataframe = pandas.read_csv("eth.csv", header=None)
+eth = ethdataframe.values
 # split into input (X) and output (Y) variables
-X = dataset[:1500, 0:-1]
-Y = dataset[:1500, -1:]
-test_X = dataset[1500:, 0:-1]
-test_Y = dataset[1500:, -1:]
+X = np.concatenate((btc[:tran_size, 0:-1], eth[:tran_size, 0:-1]), axis=1)
+Y = btc[:tran_size, -1:]
+
+test_X = np.concatenate((btc[tran_size:, 0:-1], eth[tran_size:, 0:-1]), axis=1)
+test_Y = btc[tran_size:, -1:]
 model = Sequential()
 model.add(Dense(len(X[0]), input_dim=len(X[0]), kernel_initializer='normal', activation='relu'))
 model.add(Dense(1000))
@@ -23,7 +28,7 @@ model.add(Dense(1, kernel_initializer='normal'))
 optimizer = optimizers.Adam(lr=0.00001)
 
 model.compile(loss='mean_squared_error', optimizer=optimizer)
-history = model.fit(X, Y, epochs=1000, batch_size=32, verbose=0)
+history = model.fit(X, Y, epochs=100, batch_size=32, verbose=0)
 
 actual = test_Y.reshape((1, len(test_Y)))[0]
 prediction = model.predict(x=np.array(test_X))
