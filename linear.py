@@ -40,9 +40,8 @@ model.add(Dense(1, kernel_initializer='normal'))
 optimizer = optimizers.Adam(lr=0.00000005)
 
 model.compile(loss='mean_squared_error', optimizer=optimizer)
-model_name = "{}-{}-{}-{}.h5".format(targeted_coin, '-'.join(coins), track_size, prediction_interval)
+model_name = "{}-{}-{}-{}.h5".format(targeted_coin, '-'.join(sorted(coins)), track_size, prediction_interval)
 model_path = 'models/{}'.format(model_name)
-print(model_name)
 try:
     model.load_weights(model_path)
 except:
