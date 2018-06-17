@@ -9,10 +9,10 @@ from keras.models import load_model
 from matplotlib import pyplot as plt
 
 tran_size = 1500
-targeted_coin = 'mco'
-coins = ['eos', 'eth', 'xrp', 'ltc', 'dash', 'mco', 'bnb']
+targeted_coin = 'btc'
+coins = ['btc', 'eos', 'eth', 'xrp', 'ltc', 'dash', 'mco', 'bnb']
 track_size = 10
-prediction_interval = 12
+prediction_interval = 3
 X = None
 for i in range(len(coins)):
     coin = coins[i]
@@ -34,19 +34,23 @@ for i in range(len(coins)):
 model = Sequential()
 model.add(Dense(len(X[0]), input_dim=len(X[0]), kernel_initializer='normal', activation='relu'))
 model.add(Dense(1000))
+model.add(Dense(1000))
 model.add(Dense(1, kernel_initializer='normal'))
 # Compile model
-optimizer = optimizers.Adam(lr=0.0000000001)
+optimizer = optimizers.Adam(lr=0.00000005)
 
 model.compile(loss='mean_squared_error', optimizer=optimizer)
+model_name = "{}-{}-{}-{}.h5".format(targeted_coin, '-'.join(coins), track_size, prediction_interval)
+model_path = 'models/{}'.format(model_name)
+print(model_name)
 try:
-    model.load_weights('model.h5')
+    model.load_weights(model_path)
 except:
     print("Cannot load model")
 steps = 100
 for i in range(steps):
-    history = model.fit(X, Y, epochs=100, batch_size=32, verbose=0)
-    model.save_weights('model.h5')
+    history = model.fit(X, Y, epochs=100, batch_size=128, verbose=0)
+    model.save_weights(model_path)
     evaluation = model.evaluate(test_X, test_Y)
     print("{:d}/{:d} Loss: {:f}".format(i + 1, steps, evaluation))
 
