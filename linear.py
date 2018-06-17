@@ -8,7 +8,7 @@ from keras.models import Sequential
 from keras.models import load_model
 from matplotlib import pyplot as plt
 
-tran_size = 1500
+tran_size = 1800
 targeted_coin = 'btc'
 coins = ['btc', 'eos', 'eth', 'xrp', 'ltc', 'dash', 'mco', 'bnb']
 track_size = 10
@@ -16,7 +16,7 @@ prediction_interval = 3
 X = None
 for i in range(len(coins)):
     coin = coins[i]
-    dataframe = pandas.read_csv(coin + ".csv", header=None)
+    dataframe = pandas.read_csv("data/{}.csv".format(coin), header=None)
     values = dataframe.values
     d = []
     for j in range(len(values) - track_size - prediction_interval):
