@@ -13,7 +13,7 @@ coins = ['btc', 'eos', 'eth', 'xrp', 'ltc', 'dash', 'mco', 'bnb']
 track_size = 10
 prediction_interval = 3
 model_name = "{}-{}-{}-{}.h5".format(targeted_coin, '-'.join(sorted(coins)), track_size, prediction_interval)
-model_path = 'models/{}'.format(model_name)
+model_path = 'crypto/models/{}'.format(model_name)
 
 
 def get_data():
@@ -23,7 +23,7 @@ def get_data():
     test_y = None
     for i in range(len(coins)):
         coin = coins[i]
-        data_set = pandas.read_csv("data/{}.csv".format(coin), header=None)
+        data_set = pandas.read_csv("crypto/data/{}.csv".format(coin), header=None)
         values = data_set.values
         d = []
         for j in range(len(values) - track_size - prediction_interval):
