@@ -61,7 +61,7 @@ class Agent:
         predicts = self.model.predict(np.array(s_batch))
         q_values = self.model.predict(np.array(s1_batch))
         for i in range(0, len(predicts)):
-            # if done_batch[i]:
+            if done_batch[i]:
                 predicts[i][a_batch[i]] = r_batch[i]
             else:
                 predicts[i][a_batch[i]] = r_batch[i] + self.gamma * np.amax(q_values[i])
