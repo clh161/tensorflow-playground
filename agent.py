@@ -75,7 +75,8 @@ class Agent:
         for _ in range(episodes):
             state = self.env.reset()
             total_reward = 0
-            for t in range(1000):
+            done = None
+            while not done:
                 self.step += 1
                 action = self.get_action(state)
                 state1, reward, done, _ = self.env.step(action)
@@ -91,5 +92,3 @@ class Agent:
                     print("Steps: %d, Rewards: %.3f, Loss: %.3f Epsilon: %0.5f" % (
                         self.step, np.average(self.rewards), np.average(loss), self.epsilon))
                     break
-
-
