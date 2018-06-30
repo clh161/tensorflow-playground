@@ -24,7 +24,7 @@ model.compile(optimizer=optimizer, loss='mse')
 
 env.reset()
 OBSERVE = 200000
-MEMORY = 10000
+MEMORY_SIZE = 10000
 GAMMA = 0.99
 
 t2 = 0
@@ -55,13 +55,13 @@ while not None:
         store_r.append(r)
         store_d.append(done)
         s = s1
-        if len(store_s) > MEMORY:
+        if len(store_s) > MEMORY_SIZE:
             store_s.popleft()
             store_s1.popleft()
             store_a.popleft()
             store_r.popleft()
             store_d.popleft()
-        if t2 % MEMORY == 0:
+        if t2 % MEMORY_SIZE == 0:
             ss = model.predict(np.array(store_s))
             ss1 = model.predict(np.array(store_s1))
             for i in range(0, len(ss)):

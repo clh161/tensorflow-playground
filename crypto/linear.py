@@ -88,6 +88,7 @@ def test(model, test_x, test_y):
 
 def run():
     x, y, test_x, test_y = get_data()
+    print(x)
     model = build_model(len(x[0]))
     train(model, x, y)
     test(model, test_x, test_y)
