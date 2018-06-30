@@ -3,7 +3,7 @@ import gym
 import numpy as np
 from keras import optimizers
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Flatten
 import random
 from collections import deque
 
@@ -24,16 +24,12 @@ model.compile(optimizer=optimizer, loss='mse')
 
 env.reset()
 OBSERVE = 200000
-MEMORY_SIZE = 10000
+MEMORY_SIZE = 100000
 GAMMA = 0.99
+BATCH_SIZE = 10000
 
 t2 = 0
-D = deque()
-store_s = deque()
-store_s1 = deque()
-store_a = deque()
-store_r = deque()
-store_d = deque()
+memory = deque()
 rewards = deque()
 while not None:
     s = env.reset()
@@ -49,31 +45,32 @@ while not None:
         s1, r, done, info = env.step(a)
         reward += r
         # env.render()
-        store_s.append(s)
-        store_s1.append(s1)
-        store_a.append(a)
-        store_r.append(r)
-        store_d.append(done)
+        memory.append([s, s1, a, r, done])
         s = s1
-        if len(store_s) > MEMORY_SIZE:
-            store_s.popleft()
-            store_s1.popleft()
-            store_a.popleft()
-            store_r.popleft()
-            store_d.popleft()
-        if t2 % MEMORY_SIZE == 0:
-            ss = model.predict(np.array(store_s))
-            ss1 = model.predict(np.array(store_s1))
-            for i in range(0, len(ss)):
-                if store_d[i]:
-                    ss[i][store_a[i]] = store_r[i]
+        if len(memory) > MEMORY_SIZE:
+            memory.popleft()
+        if t2 % BATCH_SIZE == 0 and len(memory) > BATCH_SIZE:
+            samples = random.sample(memory, BATCH_SIZE)
+            s_batch = [sample[0] for sample in samples]
+            s1_batch = [sample[1] for sample in samples]
+            a_batch = [sample[2] for sample in samples]
+            r_batch = [sample[3] for sample in samples]
+            done_batch = [sample[4] for sample in samples]
+            predicts = model.predict(np.array(s_batch))
+            q_values = model.predict(np.array(s1_batch))
+            for i in range(0, len(predicts)):
+                if done_batch[i]:
+                    predicts[i][a_batch[i]] = r_batch[i]
                 else:
-                    ss[i][store_a[i]] = store_r[i] + GAMMA * (np.amax(ss1[i]))
-            loss = model.fit(x=np.array(store_s), y=ss, verbose=None, epochs=10, batch_size=32).history['loss']
-            print("Steps: %d, Scores: %.3f, loss: %.3f" % (t2, np.average(rewards), np.average(loss)))
+                    predicts[i][a_batch[i]] = r_batch[i] + GAMMA * np.amax(q_values[i])
+            loss = model.fit(x=np.array(s_batch), y=predicts, verbose=None,epochs=10).history['loss']
+            # loss = model.train_on_batch(x=np.array(s_batch), y=predicts)
+            print("Steps: %d, Rewards: %.3f, Loss: %.3f" % (t2, np.average(rewards), np.average(loss)))
             model.save_weights('model-v1.h5')
+
+
         if done:
             rewards.append(reward)
-            if len(rewards) > 1000:
+            if len(rewards) > 100:
                 rewards.popleft()
             break
