@@ -80,6 +80,7 @@ class Agent:
             while not done:
                 self.step += 1
                 action = self.get_action(state)
+                self.env.render()
                 if self.env.action_space.shape == ():
                     state1, reward, done, _ = self.env.step(action)
                 else:
