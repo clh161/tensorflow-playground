@@ -43,7 +43,7 @@ class Agent:
         if random.uniform(0, 1) < self.epsilon:
             return random.sample(self.actions, 1)[0]
         else:
-            return np.argmax(self.model.predict(np.array([state]))[0])
+            return self.actions[np.argmax(self.model.predict(np.array([state]))[0])]
 
     def append_memory(self, state, state1, action, reward, done):
         self.memory.append([state, state1, action, reward, done])
@@ -73,16 +73,17 @@ class Agent:
         return np.average(loss)
 
     def train(self, episodes):
-        for _ in range(episodes):
+        for episode in range(episodes):
             state = self.env.reset()
             total_reward = 0
             done = None
             while not done:
                 self.step += 1
                 action = self.get_action(state)
-                if self.env.action_space.shape != ():
-                    action = [action]
-                state1, reward, done, _ = self.env.step(action)
+                if self.env.action_space.shape == ():
+                    state1, reward, done, _ = self.env.step(action)
+                else:
+                    state1, reward, done, _ = self.env.step([action])
                 total_reward += reward
                 self.append_memory(state, state1, action, reward, done)
                 state = state1
@@ -92,6 +93,6 @@ class Agent:
                     if len(self.rewards) > 10:
                         self.rewards.popleft()
                     loss = self.replay()
-                    print("Steps: %d, Rewards: %.3f, Loss: %.3f Epsilon: %0.5f" % (
-                        self.step, np.average(self.rewards), np.average(loss), self.epsilon))
+                    print("Episode: %d, Steps: %d, Rewards: %.3f, Loss: %.3f Epsilon: %0.5f" % (
+                        episode, self.step, np.average(self.rewards), np.average(loss), self.epsilon))
                     break
