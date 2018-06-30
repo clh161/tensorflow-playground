@@ -63,9 +63,9 @@ class Agent:
         q_values = self.model.predict(np.array(s1_batch))
         for i in range(0, len(predicts)):
             if done_batch[i]:
-                predicts[i][a_batch[i]] = r_batch[i]
+                predicts[i][self.actions.index(a_batch[i])] = r_batch[i]
             else:
-                predicts[i][a_batch[i]] = r_batch[i] + self.gamma * np.amax(q_values[i])
+                predicts[i][self.actions.index(a_batch[i])] = r_batch[i] + self.gamma * np.amax(q_values[i])
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
         loss = self.model.fit(x=np.array(s_batch), y=predicts, verbose=None).history['loss']
