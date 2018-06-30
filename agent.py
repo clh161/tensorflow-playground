@@ -8,9 +8,10 @@ import numpy as np
 
 class Agent:
 
-    def __init__(self, env, memory_size=1000, sample_size=32, gamma=0.99, model=None,
+    def __init__(self, env, actions, memory_size=1000, sample_size=32, gamma=0.99, model=None,
                  epsilon_decay=0.999,
                  epsilon_min=0.001, learning_rate=0.001):
+        self.actions = actions
         self.epsilon_min = epsilon_min
         self.learning_rate = learning_rate
         self.epsilon = 1
@@ -40,7 +41,7 @@ class Agent:
 
     def get_action(self, state):
         if random.uniform(0, 1) < self.epsilon:
-            return self.env.action_space.sample()
+            return random.sample(self.actions, 1)[0]
         else:
             return np.argmax(self.model.predict(np.array([state]))[0])
 
