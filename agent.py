@@ -9,7 +9,7 @@ import numpy as np
 class Agent:
 
     def __init__(self, env, actions, memory_size=1000, sample_size=32, gamma=0.99, model=None,
-                 epsilon_decay=0.999,
+                 epsilon_decay=0.995,
                  epsilon_min=0.001, learning_rate=0.001):
         self.actions = actions
         self.epsilon_min = epsilon_min
