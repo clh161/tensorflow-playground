@@ -17,7 +17,7 @@ model.add(Dense(16))
 model.add(Activation('relu'))
 model.add(Dense(2))
 model.add(Activation('linear'))
-optimizer = optimizers.SGD(lr=0.01)
+optimizer = optimizers.SGD(lr=0.001)
 
 model.compile(optimizer=optimizer, loss='mse')
 # model.load_weights('model-v1.h5')
@@ -63,7 +63,7 @@ while not None:
                     predicts[i][a_batch[i]] = r_batch[i]
                 else:
                     predicts[i][a_batch[i]] = r_batch[i] + GAMMA * np.amax(q_values[i])
-            loss = model.fit(x=np.array(s_batch), y=predicts, verbose=None,epochs=10).history['loss']
+            loss = model.fit(x=np.array(s_batch), y=predicts, verbose=None).history['loss']
             # loss = model.train_on_batch(x=np.array(s_batch), y=predicts)
             print("Steps: %d, Rewards: %.3f, Loss: %.3f" % (t2, np.average(rewards), np.average(loss)))
             model.save_weights('model-v1.h5')
