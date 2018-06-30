@@ -20,7 +20,7 @@ model.add(Activation('linear'))
 optimizer = optimizers.SGD(lr=0.001)
 
 model.compile(optimizer=optimizer, loss='mse')
-# model.load_weights('model-v1.h5')
+model.load_weights('model-v1.h5')
 
 env.reset()
 OBSERVE = 200000
