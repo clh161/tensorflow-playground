@@ -72,8 +72,10 @@ class Agent:
         self.model.save_weights('model-v1.h5')
         return np.average(loss)
 
-    def train(self, episodes):
-        for episode in range(episodes):
+    def train(self, stop_on_rewards):
+        episode = 0
+        while len(self.rewards) == 0 or np.average(self.rewards) < stop_on_rewards:
+            episode += 1
             state = self.env.reset()
             total_reward = 0
             done = None
@@ -91,7 +93,7 @@ class Agent:
 
                 if done:
                     self.rewards.append(total_reward)
-                    if len(self.rewards) > 10:
+                    if len(self.rewards) > 100:
                         self.rewards.popleft()
                     loss = self.replay()
                     print("Episode: %d, Steps: %d, Rewards: %.3f, Loss: %.3f Epsilon: %0.5f" % (

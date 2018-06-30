@@ -20,4 +20,4 @@ optimizer = optimizers.Adam(lr=0.001)
 model.compile(optimizer=optimizer, loss='mse')
 agent = Agent(env, model=model,
               actions=actions)
-agent.train(10000000)
+agent.train(stop_on_rewards=90)
