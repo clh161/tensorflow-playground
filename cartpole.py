@@ -4,7 +4,7 @@ import gym
 
 from agent import Agent
 
-env = gym.make('CartPole-v0')
+env = gym.make('Pendulum-v0')
 # model.load_weights('model-v1.h5')
 
 env.reset()

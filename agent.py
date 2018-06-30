@@ -28,11 +28,11 @@ class Agent:
 
     def build_model(self):
         model = Sequential()
-        model.add(Dense(12, input_dim=4))
+        model.add(Dense(12, input_shape=self.env.observation_space.shape))
         model.add(Activation('relu'))
         model.add(Dense(12))
         model.add(Activation('relu'))
-        model.add(Dense(2))
+        model.add(Dense(self.env.action_space.n))
         model.add(Activation('linear'))
         optimizer = optimizers.Adam(lr=self.learning_rate)
         model.compile(optimizer=optimizer, loss='mse')
