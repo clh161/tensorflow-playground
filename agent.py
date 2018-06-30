@@ -80,6 +80,8 @@ class Agent:
             while not done:
                 self.step += 1
                 action = self.get_action(state)
+                if self.env.action_space.shape != ():
+                    action = [action]
                 state1, reward, done, _ = self.env.step(action)
                 total_reward += reward
                 self.append_memory(state, state1, action, reward, done)
