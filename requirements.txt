@@ -37,7 +37,7 @@ PySC2==2.0.1
 python-dateutil==2.7.3
 pytz==2018.4
 PyYAML==3.12
-requests==2.19.1
+requests==2.22.0
 s2clientprotocol==4.3.2.65384.0
 scikit-learn==0.19.1
 scipy==1.1.0
