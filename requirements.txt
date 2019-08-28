@@ -1,4 +1,4 @@
-absl-py==0.2.2
+absl-py==0.8.0
 astor==0.6.2
 atari-py==0.1.1
 bleach==3.1.0
