@@ -40,7 +40,7 @@ PyYAML==3.12
 requests==2.22.0
 s2clientprotocol==4.3.2.65384.0
 scikit-learn==0.19.1
-scipy==1.1.0
+scipy==1.5.0
 six==1.11.0
 sk-video==1.1.10
 tensorboard==1.8.0
