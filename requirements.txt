@@ -46,7 +46,7 @@ sk-video==1.1.10
 tensorboard==1.8.0
 tensorflow==1.14.0
 termcolor==1.1.0
-urllib3==1.23
+urllib3==1.26.5
 virtualenv==16.0.0
 webencodings==0.5.1
 websocket-client==0.48.0
